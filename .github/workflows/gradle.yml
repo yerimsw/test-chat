@@ -38,7 +38,7 @@ jobs:
 
       # build 후 프로젝트를 압축.
       - name: Make zip file
-        run: zip -r ./chat-deloy.zip .
+        run: zip -r ./server-deloy.zip .
         shell: bash
 
       # Access Key와 Secret Access Key를 통해 IAM 계정 권한을 확인.
@@ -51,12 +51,12 @@ jobs:
 
       # 압축한 프로젝트를 S3로 전송.
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./chat-deploy.zip s3://$S3_BUCKET_NAME/chat-deploy.zip #버킷에 업로드.
+        run: aws s3 cp --region ap-northeast-2 ./server-deploy.zip s3://$S3_BUCKET_NAME/server-deploy.zip #버킷에 업로드.
 
       # CodeDeploy에게 배포 명령을 내립니다.
       - name: Code Deploy
         run: >
-          aws deploy create-deployment --application-name chat-deploy
+          aws deploy create-deployment --application-name server-deploy
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name main-challenge66-CodeDeployApp-group
-          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=chat-deploy.zip
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=server-deploy.zip
